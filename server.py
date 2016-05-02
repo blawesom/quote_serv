@@ -1,34 +1,22 @@
 # encoding: utf-8
 
 import os
+import random
 import flask
 
-from sqlalchemy import Column, String, Integer, create_engine, func
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from  sqlalchemy.types import DateTime, String, Integer
-import random
+
+from .models import Quotes, Base
 
 # SQLAlchemy session and db opening
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 engine = create_engine('sqlite:///{}'.format(os.path.join(SCRIPT_DIR, 'data.db')))
 
-Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
 app = flask.Flask(__name__)
-
-
-# Declares object structure included in database
-class Quotes(Base):
-    __tablename__ = 'quotes_fr'
-    id = Column(Integer, primary_key=True)
-    text = Column(String)
-    category = Column(String)
-    author = Column(String)
-    last_check = Column(DateTime(timezone=True), default=func.now())
-    sqlite_autoincrement = True
 
 
 def get_quote(theme=None):
